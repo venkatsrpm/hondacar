@@ -10,31 +10,57 @@ class App extends React.Component {
   constructor(){
     super()
     this.state = {
+      filteredHondaModelList: [],
       hondamodelList: [],
-      searchString: "",
-      cart:[]
+      searchString: " ",
+      cart:[],
+
     }
   }
 
 updateSearchString(searchStringAsAnInput){
   this.setState({
     searchString: searchStringAsAnInput
+  }, ()=>{
+    if(searchStringAsAnInput != " "){
+      let newFilteredHondamodelList = this.state.hondamodelList.filter((eachHondamodel)=>{
+        return eachHondamodel.hondacarModel.indexOf(searchStringAsAnInput) > -1
+      })
+
+      this.setState({
+        filteredHondaModelList: newFilteredHondamodelList
+      })
+
+    }else{
+      this.setState({
+      filteredHondaModelList: this.state.hondamodelList
+      })
+    }
   })
 }
-handleAddToCart(hondacar){
-  console.log("This is the message from App snd tis is the product that is clicked",hondacar)
-
+handleAddToCart(newHondacar){
+  console.log("This is the message from App snd tis is the product that is clicked",newHondacar)
+   let newCart = [...this.state.cart,newHondacar]
   this.setState({
-    cart: [...this.state.cart,hondacar]
+    cart: newCart
   })
 
+}
+handleRemoveCart(newHondacar){
+  let newCart = [...this.state.cart,newHondacar]
+   let editCart = newCart.filter(elem => elem !== newCart[newCart.length-1])
+   this.setState({
+   cart: editCart
+   })
 }
 
   render(){
     return(
       <div className="App">
-         <SearchBar searchString={this.state.searchString} thisIsFunctionASProp_updateSearchString={(searchStringInput)=>this.updateSearchString(searchStringInput)} />
-         <Modellist hondamodels = {this.state.hondamodelList} handleAddToCartInProductContainer ={(hondacar)=>this.handleAddToCart(hondacar)} />
+         <SearchBar searchString={this.state.searchString} cart={this.state.cart} thisIsFunctionASProp_updateSearchString={(searchStringInput)=>this.updateSearchString(searchStringInput)} />
+         <Modellist cart={this.state.cart}  hondamodels = {this.state.hondamodelList}
+          handleAddToCartInProductContainer ={(hondacar)=>this.handleAddToCart(hondacar)}
+          handleToDeleteInProductContainer = {(hondacar)=>this.handleRemoveCart(hondacar)}/>
       </div>
     );
   }

@@ -19,6 +19,9 @@ handleSearchInput(event){
     return(
       <div>
           <input value={this.props.searchString} onChange={event=>this.handleSearchInput(event)}/>
+          <div className='cart-cont'>
+              <span className='cart-font'> {this.props.cart.length} </span>
+          </div>
       </div>
     )
   }
